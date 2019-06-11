@@ -28,13 +28,13 @@ namespace StarChart.Controllers
             return Ok(celestialObject);
         }
 
-           [HttpGet("{name}")]
-           public IActionResult GetByName(string name)
+        [HttpGet("{name}")]
+        public IActionResult GetByName(string name)
         {
             var celestialObjects = _context.CelestialObjects.Where(e => e.Name == name).ToList();
             if (!celestialObjects.Any())
                 return NotFound();
-            foreach(var celestialObject in celestialObjects)
+            foreach (var celestialObject in celestialObjects)
             {
                 celestialObject.Satellites = _context.CelestialObjects.Where(e => e.OrbitedObjectId == celestialObject.Id).ToList();
             }
@@ -60,7 +60,7 @@ namespace StarChart.Controllers
             return CreatedAtRoute("GetById", new { id = celestialObject.Id }, celestialObject);
         }
 
-        [HttpPost]
+        [HttpPut("{id}")]
         public IActionResult Update(int id, CelestialObject celestialObject)
         {
             var exisitingObject = _context.CelestialObjects.Find(id);
@@ -74,7 +74,7 @@ namespace StarChart.Controllers
             return NoContent();
         }
 
-        [HttpPatch]
+        [HttpPatch("{id}/{name}")]
         public IActionResult RenameObject(int id, string name)
         {
             var exisitingObject = _context.CelestialObjects.Find(id);
@@ -85,7 +85,7 @@ namespace StarChart.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             var celestialObjects = _context.CelestialObjects.Where(e => e.Id == id || e.OrbitedObjectId == id);
